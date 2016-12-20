@@ -32,7 +32,7 @@ public class ServerUtils {
 
     public String getServerUrl() {
         Connector connector = server.getConnectors()[0];
-        return String.format("http://%s:%d/plantuml/", connector.getHost(), connector.getLocalPort());
+        return null; //String.format("http://%s:%d/plantuml/", connector.getHost(), connector.getLocalPort());
     }
 
 }

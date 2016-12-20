@@ -45,6 +45,9 @@ public abstract class UmlDiagramService extends HttpServlet {
         // build the UML source from the compressed request parameter
         String uml = UmlExtractor.getUmlSource(getSource(request.getRequestURI()));
 
+        response.addHeader("Access-Control-Allow-Origin", "https://plant.draw.io");
+        response.addHeader("Access-Control-Allow-Methods", "GET");
+
         // generate the response
         DiagramResponse dr = new DiagramResponse(response, getOutputFormat());
         try {
