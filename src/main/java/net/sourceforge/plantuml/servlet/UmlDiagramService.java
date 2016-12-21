@@ -24,6 +24,7 @@
 package net.sourceforge.plantuml.servlet;
 
 import java.io.IOException;
+
 import javax.imageio.IIOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -44,19 +45,33 @@ public abstract class UmlDiagramService extends HttpServlet {
 
         // build the UML source from the compressed request parameter
         String uml = UmlExtractor.getUmlSource(getSource(request.getRequestURI()));
-
-        response.addHeader("Access-Control-Allow-Origin", "https://plant.draw.io");
-        response.addHeader("Access-Control-Allow-Methods", "GET");
-
-        // generate the response
-        DiagramResponse dr = new DiagramResponse(response, getOutputFormat());
-        try {
-            dr.sendDiagram(uml);
-        } catch (IIOException iioe) {
-            // Browser has closed the connection, so the HTTP OutputStream is closed
-            // Silently catch the exception to avoid annoying log
+        String ref = request.getHeader("referer");
+        String dom = null;
+        
+        if (ref != null && ref.toLowerCase().matches("https?://([a-z0-9]+[.])*draw[.]io/.*"))
+        {
+        	dom = ref.toLowerCase().substring(0, ref.indexOf(".draw.io/") + 8);
         }
-        dr = null;
+        
+        if (dom == null)
+        {
+        	response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        }
+        else
+        {
+	        response.addHeader("Access-Control-Allow-Origin", dom);
+	        response.addHeader("Access-Control-Allow-Methods", "GET");
+	
+	        // generate the response
+	        DiagramResponse dr = new DiagramResponse(response, getOutputFormat());
+	        try {
+	            dr.sendDiagram(uml);
+	        } catch (IIOException iioe) {
+	            // Browser has closed the connection, so the HTTP OutputStream is closed
+	            // Silently catch the exception to avoid annoying log
+	        }
+	        dr = null;
+        }
     }
 
     /**
