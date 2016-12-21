@@ -4,7 +4,7 @@
     </description>
 
 	<property name="project-name" value="${ant.project.name}" />
-	<property name="war-file-name" value="plantuml.war" />
+	<property name="war-file-name" value="plantuml2.war" />
 	<property name="source-directory" value="src/main/java" />
 	<property name="classes-directory" value="bin" />
 	<property name="web-directory" value="src/main/webapp" />
