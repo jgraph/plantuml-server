@@ -38,56 +38,70 @@ import net.sourceforge.plantuml.servlet.utility.UmlExtractor;
  * Common service servlet to produce diagram from compressed UML source contained in the end part of the requested URI.
  */
 @SuppressWarnings("serial")
-public abstract class UmlDiagramService extends HttpServlet {
+public abstract class UmlDiagramService extends HttpServlet
+{
 
-    @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	@Override
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException
+	{
 
-        // build the UML source from the compressed request parameter
-        String uml = UmlExtractor.getUmlSource(getSource(request.getRequestURI()));
-        String ref = request.getHeader("referer");
-        String dom = null;
-        
-        if (ref != null && ref.toLowerCase().matches("https?://([a-z0-9]+[.])*draw[.]io/.*"))
-        {
-        	dom = ref.toLowerCase().substring(0, ref.indexOf(".draw.io/") + 8);
-        }
-        
-        if (dom == null)
-        {
-        	response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        }
-        else
-        {
-	        response.addHeader("Access-Control-Allow-Origin", dom);
-	        response.addHeader("Access-Control-Allow-Methods", "GET");
-	
-	        // generate the response
-	        DiagramResponse dr = new DiagramResponse(response, getOutputFormat());
-	        try {
-	            dr.sendDiagram(uml);
-	        } catch (IIOException iioe) {
-	            // Browser has closed the connection, so the HTTP OutputStream is closed
-	            // Silently catch the exception to avoid annoying log
-	        }
-	        dr = null;
-        }
-    }
+		// build the UML source from the compressed request parameter
+		String uml = UmlExtractor
+				.getUmlSource(getSource(request.getRequestURI()));
+		String ref = request.getHeader("referer");
+		String dom = null;
 
-    /**
-     * Extracts the compressed UML source from the HTTP URI.
-     *
-     * @param uri
-     *            the complete URI as returned by request.getRequestURI()
-     * @return the compressed UML source
-     */
-    abstract public String getSource(String uri);
+		if (ref != null && ref.toLowerCase()
+				.matches("https?://([a-z0-9,-]+[.])*draw[.]io/.*"))
+		{
+			dom = ref.toLowerCase().substring(0, ref.indexOf(".draw.io/") + 8);
+		}
+		else if (ref != null && ref.toLowerCase()
+				.matches("https?://([a-z0-9,-]+[.])*quipelements[.]com/.*"))
+		{
+			dom = ref.toLowerCase().substring(0, ref.indexOf(".quipelements.com/") + 17);
+		}
 
-    /**
-     * Gives the wished output format of the diagram. This value is used by the DiagramResponse class.
-     *
-     * @return the format
-     */
-    abstract public FileFormat getOutputFormat();
+		if (dom == null)
+		{
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		}
+		else
+		{
+			response.addHeader("Access-Control-Allow-Origin", dom);
+			response.addHeader("Access-Control-Allow-Methods", "GET");
+
+			// generate the response
+			DiagramResponse dr = new DiagramResponse(response,
+					getOutputFormat());
+			try
+			{
+				dr.sendDiagram(uml);
+			}
+			catch (IIOException iioe)
+			{
+				// Browser has closed the connection, so the HTTP OutputStream is closed
+				// Silently catch the exception to avoid annoying log
+			}
+			dr = null;
+		}
+	}
+
+	/**
+	 * Extracts the compressed UML source from the HTTP URI.
+	 *
+	 * @param uri
+	 *            the complete URI as returned by request.getRequestURI()
+	 * @return the compressed UML source
+	 */
+	abstract public String getSource(String uri);
+
+	/**
+	 * Gives the wished output format of the diagram. This value is used by the DiagramResponse class.
+	 *
+	 * @return the format
+	 */
+	abstract public FileFormat getOutputFormat();
 
 }
