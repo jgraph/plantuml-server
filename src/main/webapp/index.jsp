@@ -7,7 +7,8 @@
         (pageContext.request.scheme == 'https' && pageContext.request.serverPort != 443) }">
     <c:set var="port" value=":${pageContext.request.serverPort}" />
 </c:if>
-<c:set var="hostpath" value="${pageContext.request.scheme}://${pageContext.request.serverName}${port}${contextroot}" />
+<c:set var="scheme" value="${(not empty header['x-forwarded-proto']) ? header['x-forwarded-proto'] : pageContext.request.scheme}" />
+<c:set var="hostpath" value="${scheme}://${pageContext.request.serverName}${port}${contextroot}" />
 <c:if test="${!empty encoded}">
     <c:set var="imgurl" value="${hostpath}/png/${encoded}" />
     <c:set var="svgurl" value="${hostpath}/svg/${encoded}" />
@@ -27,8 +28,8 @@
     <link rel="icon" href="${contextroot}/favicon.ico" type="image/x-icon"/> 
     <link rel="shortcut icon" href="${contextroot}/favicon.ico" type="image/x-icon"/>
     <link rel="stylesheet" href="${contextroot}/plantuml.css" />
-    <link rel="stylesheet" href="webjars/codemirror/3.21/lib/codemirror.css" />
-    <script src="webjars/codemirror/3.21/lib/codemirror.js"></script>
+    <link rel="stylesheet" href="${contextroot}/webjars/codemirror/3.21/lib/codemirror.css" />
+    <script src="${contextroot}/webjars/codemirror/3.21/lib/codemirror.js"></script>
     <!-- <script src="mode/plantuml.js"></script> -->
     <script>
         window.onload = function() {
@@ -82,10 +83,7 @@
         <p id="diagram">
             <c:choose>
             <c:when test="${!empty mapurl}">
-                <img src="${imgurl}" alt="PlantUML diagram" usemap="#umlmap" />
-                <map name="umlmap">
-                    <c:import url="${mapurl}" />
-                </map>
+                <img src="${imgurl}" alt="PlantUML diagram" />
             </c:when>
             <c:otherwise>
                 <img src="${imgurl}" alt="PlantUML diagram" />

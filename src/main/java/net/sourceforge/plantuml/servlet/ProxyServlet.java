@@ -83,9 +83,9 @@ public class ProxyServlet extends HttpServlet {
         //System.out.println("uml=" + uml);
 
         // generate the response
-        DiagramResponse dr = new DiagramResponse(response, getOutputFormat(fmt));
+        DiagramResponse dr = new DiagramResponse(response, getOutputFormat(fmt), request);
         try {
-            dr.sendDiagram(uml);
+            dr.sendDiagram(uml, 0);
         } catch (IIOException iioe) {
             // Browser has closed the connection, so the HTTP OutputStream is closed
             // Silently catch the exception to avoid annoying log
@@ -121,6 +121,12 @@ public class ProxyServlet extends HttpServlet {
         }
         if (format.equals("svg")) {
             return FileFormat.SVG;
+        }
+        if (format.equals("eps")) {
+            return FileFormat.EPS;
+        }
+        if (format.equals("epstext")) {
+            return FileFormat.EPS_TEXT;
         }
         if (format.equals("txt")) {
             return FileFormat.UTXT;

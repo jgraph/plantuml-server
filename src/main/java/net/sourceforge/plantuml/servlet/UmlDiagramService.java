@@ -24,7 +24,8 @@
 package net.sourceforge.plantuml.servlet;
 
 import java.io.IOException;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.imageio.IIOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -45,10 +46,17 @@ public abstract class UmlDiagramService extends HttpServlet
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException
 	{
-
-		// build the UML source from the compressed request parameter
-		String uml = UmlExtractor
-				.getUmlSource(getSource(request.getRequestURI()));
+        // build the UML source from the compressed request parameter
+        final String[] sourceAndIdx = getSourceAndIdx(request);
+        final String uml;
+        try {
+            uml = UmlExtractor.getUmlSource(sourceAndIdx[0]);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request");
+            return;
+        }
+		
 		String ref = request.getHeader("referer");
 		String dom = null;
 
@@ -72,30 +80,71 @@ public abstract class UmlDiagramService extends HttpServlet
 			response.addHeader("Access-Control-Allow-Origin", dom);
 			response.addHeader("Access-Control-Allow-Methods", "GET");
 
-			// generate the response
-			DiagramResponse dr = new DiagramResponse(response,
-					getOutputFormat());
-			try
-			{
-				dr.sendDiagram(uml);
-			}
-			catch (IIOException iioe)
-			{
-				// Browser has closed the connection, so the HTTP OutputStream is closed
-				// Silently catch the exception to avoid annoying log
-			}
-			dr = null;
+	        // generate the response
+	        DiagramResponse dr = new DiagramResponse(response, getOutputFormat(), request);
+	        final int idx = Integer.parseInt(sourceAndIdx[1]);
+	        try {
+	            dr.sendDiagram(uml, idx);
+	        } catch (IIOException iioe) {
+	            // Browser has closed the connection, so the HTTP OutputStream is closed
+	            // Silently catch the exception to avoid annoying log
+	        }
+	        
+	        dr = null;
 		}
 	}
 
-	/**
-	 * Extracts the compressed UML source from the HTTP URI.
-	 *
-	 * @param uri
-	 *            the complete URI as returned by request.getRequestURI()
-	 * @return the compressed UML source
-	 */
-	abstract public String getSource(String uri);
+        // build the UML source from the compressed request parameter
+        final String[] sourceAndIdx = getSourceAndIdx(request);
+        final String uml;
+        try {
+            uml = UmlExtractor.getUmlSource(sourceAndIdx[0]);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request");
+            return;
+        }
+
+        // generate the response
+        DiagramResponse dr = new DiagramResponse(response, getOutputFormat(), request);
+        final int idx = Integer.parseInt(sourceAndIdx[1]);
+        try {
+            dr.sendDiagram(uml, idx);
+        } catch (IIOException iioe) {
+            // Browser has closed the connection, so the HTTP OutputStream is closed
+            // Silently catch the exception to avoid annoying log
+        }
+        dr = null;
+    }
+
+    private static final Pattern RECOVER_UML_PATTERN = Pattern.compile("/\\w+/(\\d+/)?(.*)");
+
+    /**
+     * Extracts the compressed UML source from the HTTP URI.
+     *
+     * @param uri
+     *            the complete URI as returned by request.getRequestURI()
+     * @return the compressed UML source
+     */
+    public final String[] getSourceAndIdx(HttpServletRequest request) {
+        final Matcher recoverUml = RECOVER_UML_PATTERN.matcher(
+            request.getRequestURI().substring(
+            request.getContextPath().length()));
+        // the URL form has been submitted
+        if (recoverUml.matches()) {
+            final String data = recoverUml.group(2);
+            if (data.length() >= 4) {
+                String idx = recoverUml.group(1);
+                if (idx == null) {
+                    idx = "0";
+                } else {
+                    idx = idx.substring(0, idx.length() - 1);
+                }
+                return new String[]{data, idx };
+            }
+        }
+        return new String[]{"", "0" };
+    }
 
 	/**
 	 * Gives the wished output format of the diagram. This value is used by the DiagramResponse class.

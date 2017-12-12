@@ -26,15 +26,15 @@ package net.sourceforge.plantuml.servlet;
 import net.sourceforge.plantuml.FileFormat;
 
 /*
- * Image servlet of the webapp.
- * This servlet produces the UML diagram in PNG format.
+ * EPS servlet of the webapp.
+ * This servlet produces the UML diagram in EPS format.
  */
 @SuppressWarnings("serial")
-public class ImgServlet extends UmlDiagramService {
+public class EpsTextServlet extends UmlDiagramService {
 
     @Override
     public FileFormat getOutputFormat() {
-        return FileFormat.PNG;
+        return FileFormat.EPS_TEXT;
     }
 
 }
