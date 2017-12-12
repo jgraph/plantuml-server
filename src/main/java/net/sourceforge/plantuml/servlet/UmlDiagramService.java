@@ -94,29 +94,6 @@ public abstract class UmlDiagramService extends HttpServlet
 		}
 	}
 
-        // build the UML source from the compressed request parameter
-        final String[] sourceAndIdx = getSourceAndIdx(request);
-        final String uml;
-        try {
-            uml = UmlExtractor.getUmlSource(sourceAndIdx[0]);
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request");
-            return;
-        }
-
-        // generate the response
-        DiagramResponse dr = new DiagramResponse(response, getOutputFormat(), request);
-        final int idx = Integer.parseInt(sourceAndIdx[1]);
-        try {
-            dr.sendDiagram(uml, idx);
-        } catch (IIOException iioe) {
-            // Browser has closed the connection, so the HTTP OutputStream is closed
-            // Silently catch the exception to avoid annoying log
-        }
-        dr = null;
-    }
-
     private static final Pattern RECOVER_UML_PATTERN = Pattern.compile("/\\w+/(\\d+/)?(.*)");
 
     /**
