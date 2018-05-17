@@ -26,6 +26,7 @@ package net.sourceforge.plantuml.servlet;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.imageio.IIOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -39,15 +40,14 @@ import net.sourceforge.plantuml.servlet.utility.UmlExtractor;
  * Common service servlet to produce diagram from compressed UML source contained in the end part of the requested URI.
  */
 @SuppressWarnings("serial")
-public abstract class UmlDiagramService extends HttpServlet
-{
+public abstract class UmlDiagramService extends HttpServlet {
 
-	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException
-	{
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
         // build the UML source from the compressed request parameter
         final String[] sourceAndIdx = getSourceAndIdx(request);
+        final int idx = Integer.parseInt(sourceAndIdx[1]);
         final String uml;
         try {
             uml = UmlExtractor.getUmlSource(sourceAndIdx[0]);
@@ -56,7 +56,7 @@ public abstract class UmlDiagramService extends HttpServlet
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request");
             return;
         }
-		
+
 		String ref = request.getHeader("referer");
 		String dom = null;
 
@@ -80,19 +80,27 @@ public abstract class UmlDiagramService extends HttpServlet
 			response.addHeader("Access-Control-Allow-Origin", dom);
 			response.addHeader("Access-Control-Allow-Methods", "GET");
 
-	        // generate the response
-	        DiagramResponse dr = new DiagramResponse(response, getOutputFormat(), request);
-	        final int idx = Integer.parseInt(sourceAndIdx[1]);
-	        try {
-	            dr.sendDiagram(uml, idx);
-	        } catch (IIOException iioe) {
-	            // Browser has closed the connection, so the HTTP OutputStream is closed
-	            // Silently catch the exception to avoid annoying log
-	        }
-	        
-	        dr = null;
+			doDiagramResponse(request, response, uml, idx);
 		}
-	}
+    }
+
+    private void doDiagramResponse(
+        HttpServletRequest request,
+        HttpServletResponse response,
+        String uml,
+        int idx)
+        throws IOException {
+
+        // generate the response
+        DiagramResponse dr = new DiagramResponse(response, getOutputFormat(), request);
+        try {
+            dr.sendDiagram(uml, idx);
+        } catch (IIOException iioe) {
+            // Browser has closed the connection, so the HTTP OutputStream is closed
+            // Silently catch the exception to avoid annoying log
+        }
+        dr = null;
+    }
 
     private static final Pattern RECOVER_UML_PATTERN = Pattern.compile("/\\w+/(\\d+/)?(.*)");
 
@@ -123,11 +131,11 @@ public abstract class UmlDiagramService extends HttpServlet
         return new String[]{"", "0" };
     }
 
-	/**
-	 * Gives the wished output format of the diagram. This value is used by the DiagramResponse class.
-	 *
-	 * @return the format
-	 */
-	abstract public FileFormat getOutputFormat();
+    /**
+     * Gives the wished output format of the diagram. This value is used by the DiagramResponse class.
+     *
+     * @return the format
+     */
+    abstract public FileFormat getOutputFormat();
 
 }

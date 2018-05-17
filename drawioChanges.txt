@@ -1,0 +1,11 @@
+May 17, 2018
+- Added back most recent PlantUML project source (1.2018.5). Note: Deleted files in PlantUML are not deleted
+- Removed OldProxySevlet and Base64Servlet from web.xml. Also, using version 3 instead of 2.5 in web.xml as before
+- In ServerUtils class, return null from getServerUrl() as before
+- Kept build.xml file
+- Kept jars for non-maven build in lib folder
+- UmlDiagramService class had several changes to handle CORS and doPost 
+- Removed CORS from DiagramResponse
+
+TODO:
+- Remove code removed from PlantUML
