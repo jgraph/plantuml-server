@@ -73,15 +73,19 @@ public abstract class UmlDiagramService extends HttpServlet {
 
 		if (dom == null)
 		{
-			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			// response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			// DB commented out 04.04.19
+			// Prevented working on Confluence Servers
+			response.addHeader("Access-Control-Allow-Origin", "*");
+			response.addHeader("Access-Control-Allow-Methods", "GET");
 		}
 		else
 		{
 			response.addHeader("Access-Control-Allow-Origin", dom);
 			response.addHeader("Access-Control-Allow-Methods", "GET");
-
-			doDiagramResponse(request, response, uml, idx);
 		}
+		
+		doDiagramResponse(request, response, uml, idx);
     }
 
     private void doDiagramResponse(
