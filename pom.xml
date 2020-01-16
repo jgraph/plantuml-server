@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.sourceforge.plantuml</groupId>
   <artifactId>plantumlservlet</artifactId>
-  <version>2-DRAWIO</version>
+  <version>1.2019.0-DRAWIO</version>
   <name>PlantUML Servlet</name>
   <packaging>war</packaging>
   <build>
@@ -141,7 +141,7 @@
     <dependency>
       <groupId>net.sourceforge.plantuml</groupId>
       <artifactId>plantuml</artifactId>
-      <version>2-DRAWIO</version>
+      <version>1.2019.0-DRAWIO</version>
     </dependency>
     <dependency>
     	<groupId>org.scilab.forge</groupId>
