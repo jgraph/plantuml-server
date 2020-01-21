@@ -144,6 +144,11 @@
       <version>1.2019.6-DRAWIO</version>
     </dependency>
     <dependency>
+    	<groupId>org.scilab.forge</groupId>
+	    <artifactId>jlatexmath</artifactId>
+	    <version>1.0.7</version>
+	</dependency>
+    <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>jstl</artifactId>
       <version>1.2</version>
