@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.sourceforge.plantuml</groupId>
   <artifactId>plantumlservlet</artifactId>
-  <version>1.2019.0-DRAWIO-SERVER</version>
+  <version>1.2019.2-DRAWIO-SERVER</version>
   <name>PlantUML Servlet</name>
   <packaging>war</packaging>
   <build>
