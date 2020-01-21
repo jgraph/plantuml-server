@@ -141,7 +141,7 @@
     <dependency>
       <groupId>net.sourceforge.plantuml</groupId>
       <artifactId>plantuml</artifactId>
-      <version>1.2019.0-DRAWIO</version>
+      <version>1.2019.2-DRAWIO</version>
     </dependency>
     <dependency>
     	<groupId>org.scilab.forge</groupId>
