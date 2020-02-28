@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import net.sourceforge.plantuml.BlockUml;
 import net.sourceforge.plantuml.FileFormat;
 import net.sourceforge.plantuml.FileFormatOption;
+import net.sourceforge.plantuml.OptionFlags;
 import net.sourceforge.plantuml.NullOutputStream;
 import net.sourceforge.plantuml.SourceStringReader;
 import net.sourceforge.plantuml.StringUtils;
@@ -68,6 +69,12 @@ class DiagramResponse {
         map.put(FileFormat.UTXT, "text/plain;charset=UTF-8");
         map.put(FileFormat.BASE64, "text/plain; charset=x-user-defined");
         CONTENT_TYPE = Collections.unmodifiableMap(map);
+    }
+    static {
+        OptionFlags.ALLOW_INCLUDE = false;
+        if ("true".equalsIgnoreCase(System.getenv("ALLOW_PLANTUML_INCLUDE"))) {
+            OptionFlags.ALLOW_INCLUDE = true;
+        }
     }
 
     DiagramResponse(HttpServletResponse r, FileFormat f, HttpServletRequest rq) {
