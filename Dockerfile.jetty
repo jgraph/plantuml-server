@@ -2,6 +2,7 @@ FROM maven:3.6-jdk-8 AS builderjetty
 
 COPY pom.xml /app/
 COPY src /app/src/
+COPY vagrant/template/settings.xml /root/.m2/settings.xml
 
 WORKDIR /app
 RUN mvn --batch-mode --define java.net.useSystemProxies=true package

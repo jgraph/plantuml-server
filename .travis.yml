@@ -5,6 +5,15 @@ sudo: required
 services:
     - docker
 
+before_install:
+  - sudo apt-get update
+  - sudo apt-get -y install xmlstarlet
+  - xmlstarlet edit \
+         --update "//settings/servers/server/username" \
+         --value '$GITHUB_USER' \
+         --update "//settings/servers/server/password" \
+         --value '$GITHUB_PWD' vagrant/template/settings.xml.template
+  - cp vagrant/template/settings.xml.template vagrant/template/settings.xml
 stages:
   - build
   - name: docker-tag
@@ -30,9 +39,9 @@ jobs:
           name: jetty
           script:
               - if [ -z "$TRAVIS_TAG" ]; then exit 0; fi
-              - docker login  -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
-              - docker build --pull -t plantuml/plantuml-server:jetty-$TRAVIS_TAG -f Dockerfile.jetty .
-              - docker push plantuml/plantuml-server:jetty-$TRAVIS_TAG
+              - echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
+              - docker build --pull -t jgraph/plantuml-server:jetty-$TRAVIS_TAG -f Dockerfile.jetty .
+              - docker push jgraph/plantuml-server:jetty-$TRAVIS_TAG
           on:
               tags: true
 
@@ -40,23 +49,23 @@ jobs:
           name: tomcat
           script:
               - if [ -z "$TRAVIS_TAG" ]; then exit 0; fi
-              - docker login  -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
-              - docker build --pull -t plantuml/plantuml-server:tomcat-$TRAVIS_TAG -f Dockerfile.tomcat .
-              - docker push plantuml/plantuml-server:tomcat-$TRAVIS_TAG
+              - echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
+              - docker build --pull -t jgraph/plantuml-server:tomcat-$TRAVIS_TAG -f Dockerfile.tomcat .
+              - docker push jgraph/plantuml-server:tomcat-$TRAVIS_TAG
           on:
               tags: true
 
         - stage: docker-push
           name: jetty
           script:
-              - docker login  -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
-              - docker build --pull -t plantuml/plantuml-server:jetty -f Dockerfile.jetty .
-              - docker tag plantuml/plantuml-server:jetty plantuml/plantuml-server:latest
-              - docker push plantuml/plantuml-server:jetty
-              - docker push plantuml/plantuml-server:latest
+              - echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
+              - docker build --pull -t jgraph/plantuml-server:jetty -f Dockerfile.jetty .
+              - docker tag jgraph/plantuml-server:jetty jgraph/plantuml-server:latest
+              - docker push jgraph/plantuml-server:jetty
+              - docker push jgraph/plantuml-server:latest
         - stage: docker-push
           name: tomcat
           script:
-              - docker login  -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
-              - docker build --pull -t plantuml/plantuml-server:tomcat -f Dockerfile.tomcat .
-              - docker push plantuml/plantuml-server:tomcat
+              - echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
+              - docker build --pull -t jgraph/plantuml-server:tomcat -f Dockerfile.tomcat .
+              - docker push jgraph/plantuml-server:tomcat
