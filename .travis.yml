@@ -7,12 +7,9 @@ services:
 
 before_install:
   - sudo apt-get update
-  - sudo apt-get -y install xmlstarlet
-  - xmlstarlet edit \
-         --update "//settings/servers/server/username" \
-         --value '$GITHUB_USER' \
-         --update "//settings/servers/server/password" \
-         --value '$GITHUB_PWD' vagrant/template/settings.xml.template
+  - sudo apt-get -y install sed
+  - sed -i "s/USERNAME/$GITHUB_USER/g" vagrant/template/settings.xml.template
+  - sed -i "s/TOKEN/$GITHUB_PWD/g" vagrant/template/settings.xml.template
   - cp vagrant/template/settings.xml.template vagrant/template/settings.xml
 stages:
   - build
