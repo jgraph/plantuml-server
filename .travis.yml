@@ -11,6 +11,7 @@ before_install:
   - sed -i "s/USERNAME/$GITHUB_USER/g" vagrant/template/settings.xml.template
   - sed -i "s/TOKEN/$GITHUB_PWD/g" vagrant/template/settings.xml.template
   - cp vagrant/template/settings.xml.template vagrant/template/settings.xml
+  - cp vagrant/template/settings.xml.template ~/.m2/settings.xml
 stages:
   - build
   - name: docker-tag
