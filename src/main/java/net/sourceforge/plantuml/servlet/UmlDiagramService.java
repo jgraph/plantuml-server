@@ -74,6 +74,16 @@ public abstract class UmlDiagramService extends HttpServlet {
 			dom = ref.toLowerCase().substring(0, ref.indexOf(".draw.io/") + 8);
 		}
 		else if (ref != null && ref.toLowerCase()
+				.matches("https?://([a-z0-9,-]+[.])*diagrams[.]net/.*"))
+		{
+			dom = ref.toLowerCase().substring(0, ref.indexOf(".diagrams.net/") + 13);
+		}
+		else if (ref != null && ref.toLowerCase()
+				.matches("https?://([a-z0-9,-]+[.])*stratus-addons[.]com/.*"))
+		{
+			dom = ref.toLowerCase().substring(0, ref.indexOf(".stratus-addons.com/") + 19);
+		}
+		else if (ref != null && ref.toLowerCase()
 				.matches("https?://([a-z0-9,-]+[.])*quipelements[.]com/.*"))
 		{
 			dom = ref.toLowerCase().substring(0, ref.indexOf(".quipelements.com/") + 17);
