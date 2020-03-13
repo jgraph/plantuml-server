@@ -48,6 +48,9 @@ public class MapServlet extends HttpServlet {
         // build the UML source from the compressed request parameter
         String uml = UmlExtractor.getUmlSource(getSource(request.getRequestURI()));
 
+		response.addHeader("Access-Control-Allow-Origin", "*");
+		response.addHeader("Access-Control-Allow-Methods", "GET");
+
         // generate the response
         DiagramResponse dr = new DiagramResponse(response, getOutputFormat(), request);
         try {
