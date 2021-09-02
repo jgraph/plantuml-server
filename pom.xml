@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.sourceforge.plantuml</groupId>
   <artifactId>plantumlservlet</artifactId>
-  <version>1.2020.12-DRAWIO-SERVER</version>
+  <version>1.2021.10-DRAWIO-SERVER</version>
   <name>PlantUML Servlet</name>
   <packaging>war</packaging>
   <build>
@@ -141,7 +141,7 @@
     <dependency>
       <groupId>net.sourceforge.plantuml</groupId>
       <artifactId>plantuml</artifactId>
-      <version>1.2020.12-DRAWIO</version>
+      <version>1.2021.10-DRAWIO</version>
     </dependency>
     <dependency>
     	<groupId>org.scilab.forge</groupId>
@@ -203,6 +203,26 @@
       <artifactId>jsp-2.1-glassfish</artifactId>
       <version>2.1.v20100127</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+    	<groupId>org.scilab.forge</groupId>
+    	<artifactId>jlatexmath</artifactId>
+    	<version>1.0.7</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.scilab.forge</groupId>
+    	<artifactId>jlatexmath-font-greek</artifactId>
+    	<version>1.0.7</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.scilab.forge</groupId>
+    	<artifactId>jlatexmath-font-cyrillic</artifactId>
+    	<version>1.0.7</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.xmlgraphics</groupId>
+		<artifactId>batik-all</artifactId>
+		<version>1.12</version>
     </dependency>
   </dependencies>
 </project>
