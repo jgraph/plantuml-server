@@ -144,16 +144,6 @@
       <version>1.2021.10-DRAWIO</version>
     </dependency>
     <dependency>
-    	<groupId>org.scilab.forge</groupId>
-	    <artifactId>jlatexmath</artifactId>
-	    <version>1.0.7</version>
-	</dependency>
-	<dependency>
-		<groupId>org.apache.xmlgraphics</groupId>
-		<artifactId>batik-all</artifactId>
-		<version>1.12</version>
-	</dependency>
-    <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>jstl</artifactId>
       <version>1.2</version>
