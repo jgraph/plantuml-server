@@ -8,7 +8,7 @@
 
   <groupId>org.sourceforge.plantuml</groupId>
   <artifactId>plantumlservlet</artifactId>
-  <version>1.2022.2-DRAWIO-SERVER</version>
+  <version>1.2022.6-DRAWIO-SERVER</version>
   <packaging>war</packaging>
 
   <name>PlantUML Servlet</name>
@@ -53,7 +53,7 @@
     <jetty.contextpath>/${wtp.contextName}</jetty.contextpath>
 
     <!-- main versions -->
-    <plantuml.version>1.2022.2.1-DRAWIO</plantuml.version>
+    <plantuml.version>1.2022.6-DRAWIO</plantuml.version>
     <!-- Please keep the jetty version identical with the docker image -->
     <jetty.version>11.0.7</jetty.version>
     <codemirror.version>5.63.0</codemirror.version>

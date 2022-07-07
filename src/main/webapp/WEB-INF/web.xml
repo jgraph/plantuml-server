@@ -157,15 +157,6 @@
   </servlet-mapping>
 
   <servlet>
-    <servlet-name>oldproxyservlet</servlet-name>
-    <servlet-class>net.sourceforge.plantuml.servlet.OldProxyServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>oldproxyservlet</servlet-name>
-    <url-pattern>/proxy/*</url-pattern>
-  </servlet-mapping>
-
-  <servlet>
     <servlet-name>mapservlet</servlet-name>
     <servlet-class>net.sourceforge.plantuml.servlet.MapServlet</servlet-class>
   </servlet>
