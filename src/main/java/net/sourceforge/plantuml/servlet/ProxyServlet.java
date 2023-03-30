@@ -63,12 +63,37 @@ public class ProxyServlet extends HttpServlet {
         }
     }
 
+    public static boolean forbiddenURL(String full) {
+        if (full == null) {
+            return true;
+        }
+        if (full.startsWith("https://") == false && full.startsWith("http://") == false) {
+            return true;
+        }
+        if (full.matches("^https?://[-#.0-9:\\[\\]+]+/.*")) {
+            return true;
+        }
+        if (full.matches("^https?://[^.]+/.*")) {
+            return true;
+        }
+        if (full.matches("^https?://[^.]+$")) {
+            return true;
+        }
+        return false;
+    }
+
+
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         final String fmt = request.getParameter("fmt");
         final String source = request.getParameter("src");
         final String index = request.getParameter("idx");
+        if (forbiddenURL(source)) {
+            response.setStatus(400);
+            return;
+        }
+
         final URL srcUrl;
         // Check if the src URL is valid
         try {
@@ -93,7 +118,12 @@ public class ProxyServlet extends HttpServlet {
         // generate the response
         DiagramResponse dr = new DiagramResponse(response, getOutputFormat(fmt), request);
         try {
-            dr.sendDiagram(uml, 0);
+            // special handling for the MAP since it's not using "#sendDiagram()" like the other types
+            if ("map".equals(fmt)) {
+                dr.sendMap(uml, 0);
+            } else {
+                dr.sendDiagram(uml, 0);
+            }
         } catch (IIOException e) {
             // Browser has closed the connection, so the HTTP OutputStream is closed
             // Silently catch the exception to avoid annoying log
@@ -156,6 +186,10 @@ public class ProxyServlet extends HttpServlet {
         if (format.equals("txt")) {
             return FileFormat.UTXT;
         }
+        if (format.equals("map")) {
+            return FileFormat.UTXT;
+        }
+
         return FileFormat.PNG;
     }
 
