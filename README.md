@@ -23,10 +23,21 @@ Original README
 
 PlantUML Server is a web application to generate UML diagrams on-the-fly.
 
-[PlantUML is **not** affected by the log4j vulnerability.](https://github.com/plantuml/plantuml/issues/826)
+> [PlantUML is **not** affected by the log4j vulnerability.](https://github.com/plantuml/plantuml/issues/826)
 
+> **Breaking changes**:  
+> The PlantUML core removed the deprecated `ALLOW_PLANTUML_INCLUDE` environment property feature and switch to the
+> `PLANTUML_SECURITY_PROFILE` concept with version `v1.2023.9`.
+> All details about PlantUML's security can be found on <https://plantuml.com/security>.
+>
+> By default PlantUML server sets the `PLANTUML_SECURITY_PROFILE` to `INTERNET`.
+> If you need more access to e.g. other ports than 80 (http) and 443 (https) or even access to local files, please
+> consider using one of the allowlist features.
+> It is strongly advised **not** to set the `PLANTUML_SECURITY_PROFILE` below `INTERNET`!
 
-![PlantUML Server](https://raw.githubusercontent.com/plantuml/plantuml-server/master/screenshots/screenshot.png)
+![PlantUML Server](https://raw.githubusercontent.com/plantuml/plantuml-server/master/docs/screenshot.png)
+
+More examples and features about the Web UI can be found in [docs/WebUI](https://github.com/plantuml/plantuml-server/tree/master/docs/WebUI).
 
 To know more about PlantUML, please visit https://plantuml.com.
 
@@ -122,8 +133,21 @@ You can set all  the following variables:
 * `BASE_URL`
   * PlantUML Base URL path
   * Default value: `ROOT`
+* `PLANTUML_SECURITY_PROFILE`
+  * Set PlantUML security profile. See [PlantUML security](https://plantuml.com/security).
+  * If you need more access to e.g. other ports than 80 (http) and 443 (https) or even access to local files, please consider using one of the allowlist features:
+    * `plantuml.allowlist.path`
+    * `plantuml.include.path`
+    * `plantuml.allowlist.url`
+  * It is strongly advised **not** to set the `PLANTUML_SECURITY_PROFILE` below `INTERNET`!
+  * Default value: `INTERNET`
+* `PLANTUML_PROPERTY_FILE`
+  * Set PlantUML system properties (like over the Java command line using the `-Dpropertyname=value` syntax).
+  * To see what kind of file content is supported, see the documentation of [`java.util.Properties.load`](https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html#load-java.io.Reader-).
+  * Default value: `null`
 * `PLANTUML_CONFIG_FILE`
   * Local path to a PlantUML configuration file (identical to the `-config` flag on the CLI)
+  * File content will be added before each PlantUML diagram code.
   * Default value: `null`
 * `PLANTUML_LIMIT_SIZE`
   * Limits image width and height
@@ -134,9 +158,9 @@ You can set all  the following variables:
 * `HTTP_AUTHORIZATION`
   * when calling the `proxy` endpoint, the value of `HTTP_AUTHORIZATION` will be used to set the HTTP Authorization header
   * Default value: `null`
-* `ALLOW_PLANTUML_INCLUDE`
-  * Enables `!include` processing which can read files from the server into diagrams. Files are read relative to the current working directory.
-  * Default value: `false`
+* `HTTP_PROXY_READ_TIMEOUT`
+  * when calling the `proxy` endpoint, the value of `HTTP_PROXY_READ_TIMEOUT` will be the connection read timeout in milliseconds
+  * Default value: `10000` (10 seconds)
 
 
 ## Alternate: How to build your docker image
@@ -176,4 +200,4 @@ mvn package -f pom.jdk8.xml [-Dapache-jsp.scope=compile]
 
 It is possible to use PlantUML with a reverse proxy.
 
-You can find this and other examples [here](./examples).
+You can find this and other examples [here](https://github.com/plantuml/plantuml-server/tree/master/examples).
